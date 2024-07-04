@@ -18,8 +18,25 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: () => import('../views/RegisterView.vue')
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('../views/AccountView.vue')
     }
   ]
-})
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isLoggedIn) {
+      next({ name: 'home' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;

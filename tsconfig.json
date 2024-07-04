@@ -7,5 +7,16 @@
     {
       "path": "./tsconfig.app.json"
     }
+  ],
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts"
   ]
 }

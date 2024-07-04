@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { onMounted } from 'vue';
+import { useStore } from '@/store';
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
+
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch('checkLoginStatus');
+});
 </script>
 
 <template>
@@ -14,6 +22,7 @@ import HelloWorld from './components/HelloWorld.vue'
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
         <RouterLink to="/register">Register</RouterLink>
+        <RouterLink to="/account">Account</RouterLink>
       </nav>
     </div>
   </header>
