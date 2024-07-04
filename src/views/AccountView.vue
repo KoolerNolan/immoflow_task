@@ -8,7 +8,9 @@
     </div>
     <form class="form" @submit.prevent="handleSubmit">
       <div class="customize-account-wrapper">
-        <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
+        <div
+          class="form-group d-flex flex-column flex-md-row gap-2 align-items-start align-items-md-center mb-2"
+        >
           <input
             class="form-control flex-fill"
             v-model="formData.name"
@@ -22,7 +24,9 @@
           </button>
         </div>
         <div v-if="nameFeedback" class="text-success mb-2">{{ nameFeedback }}</div>
-        <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
+        <div
+          class="form-group d-flex flex-column flex-md-row gap-2 align-items-start align-items-md-center mb-2"
+        >
           <input
             class="form-control flex-fill"
             v-model="formData.email"
@@ -37,7 +41,9 @@
           </button>
         </div>
         <div v-if="emailFeedback" class="text-success mb-2">{{ emailFeedback }}</div>
-        <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
+        <div
+          class="form-group d-flex flex-column flex-md-row gap-2 align-items-start align-items-md-center mb-2"
+        >
           <input
             class="form-control flex-fill"
             v-model="formData.password"
