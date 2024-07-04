@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useStore } from '@/store';
-import { RouterLink, RouterView } from 'vue-router';
-import HelloWorld from './components/HelloWorld.vue';
+import { onMounted } from 'vue'
+import { useStore } from '@/store'
+import { RouterLink, RouterView } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
 
-const store = useStore();
+const store = useStore()
 
 onMounted(() => {
-  store.dispatch('checkLoginStatus');
-});
+  store.dispatch('checkLoginStatus')
+})
 </script>
 
 <template>
@@ -46,14 +46,6 @@ nav {
   font-size: 12px;
   text-align: center;
   margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
 }
 
 nav a {

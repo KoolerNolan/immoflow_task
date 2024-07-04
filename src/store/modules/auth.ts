@@ -1,8 +1,8 @@
-import { Module } from 'vuex';
+import { Module } from 'vuex'
 import Cookies from 'js-cookie'
 
 interface AuthState {
-  isLoggedIn: boolean;
+  isLoggedIn: boolean
 }
 
 const authModule: Module<AuthState, any> = {
@@ -11,35 +11,41 @@ const authModule: Module<AuthState, any> = {
   }),
   mutations: {
     setLoggedIn(state) {
-      state.isLoggedIn = true;
+      state.isLoggedIn = true
     },
     setLoggedOut(state) {
-      state.isLoggedIn = false;
+      state.isLoggedIn = false
     }
   },
   actions: {
     login({ commit }, { email, password }) {
-      const storedFormData = Cookies.get('userFormData');
+      const storedFormData = Cookies.get('userFormData')
       if (storedFormData) {
-        const parsedData = JSON.parse(storedFormData);
+        const parsedData = JSON.parse(storedFormData)
         if (email === parsedData.email && password === parsedData.password) {
-          commit('setLoggedIn');
-          localStorage.setItem('isLoggedIn', 'true');
-          return true; // Login successful.
+          commit('setLoggedIn')
+          localStorage.setItem('isLoggedIn', 'true')
+          return true // Login successful.
         }
       }
-      return false; // Login failed.
+      return false // Login failed.
     },
     logout({ commit }) {
-      commit('setLoggedOut');
-      localStorage.removeItem('isLoggedIn');
+      commit('setLoggedOut')
+      localStorage.removeItem('isLoggedIn')
+    },
+    deleteAccount({ commit }) {
+      Cookies.remove('userFormData')
+      commit('setLoggedOut')
+      localStorage.removeItem('isLoggedIn')
+      return true // Account deletion successful.
     },
     checkLoginStatus({ commit }) {
-      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const isLoggedIn = localStorage.getItem('isLoggedIn')
       if (isLoggedIn === 'true') {
-        commit('setLoggedIn');
+        commit('setLoggedIn')
       } else {
-        commit('setLoggedOut');
+        commit('setLoggedOut')
       }
     }
   },
@@ -48,4 +54,4 @@ const authModule: Module<AuthState, any> = {
   }
 }
 
-export default authModule;
+export default authModule

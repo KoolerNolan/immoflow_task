@@ -1,5 +1,8 @@
 <template>
-  <div class="vue-testing__login-form container">
+  <div v-if="isLoggedIn" class="vue-testing__login-form container">
+    <h1>You are already logged in!</h1>
+  </div>
+  <div v-else>
     <form class="form" @submit.prevent="handleSubmit">
       <h3 class="mb-4">Sign in to your account</h3>
       <div class="form-group mb-2">
@@ -11,6 +14,7 @@
           placeholder="Your email address ..."
           required
         />
+        <div v-if="emailError" class="text-danger">{{ emailError }}</div>
       </div>
       <div class="form-group mb-2">
         <input
@@ -31,22 +35,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useStore } from '@/store';
-import router from '@/router';
+import { computed, ref } from 'vue'
+import { useStore } from '@/store'
+import router from '@/router'
 
-const email = ref('');
-const password = ref('');
+const email = ref('')
+const password = ref('')
 
-const store = useStore();
+const store = useStore()
+
+const isLoggedIn = computed(() => store.getters.isLoggedIn)
+
+const emailError = ref<string | null>(null)
+
+const validateEmail = (email: string): boolean => {
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+  return emailPattern.test(email)
+}
 
 const handleSubmit = async () => {
-  const success = await store.dispatch('login', { email: email.value, password: password.value });
+  emailError.value = null // Reset email error
+
+  if (!validateEmail(email.value)) {
+    emailError.value = 'Please enter a valid email address.'
+    return
+  }
+
+  const success = await store.dispatch('login', { email: email.value, password: password.value })
   if (success) {
-    console.log('Login successful!');
-    await router.push({ name: 'account', params: { userId: '123' } });
+    console.log('Login successful!')
+    await router.push({ name: 'account' })
   } else {
-    console.log('Login failed. Invalid credentials.');
+    console.log('Login failed. Invalid credentials.')
+    emailError.value = 'An account with this email address does not exist.'
   }
 }
 </script>

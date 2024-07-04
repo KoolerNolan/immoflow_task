@@ -25,18 +25,18 @@ const router = createRouter({
       component: () => import('../views/AccountView.vue')
     }
   ]
-});
+})
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!store.getters.isLoggedIn) {
-      next({ name: 'home' });
+      next({ name: 'home' })
     } else {
-      next();
+      next()
     }
   } else {
-    next();
+    next()
   }
-});
+})
 
-export default router;
+export default router
