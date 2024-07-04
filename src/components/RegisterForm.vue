@@ -1,6 +1,6 @@
 <template>
   <div class="vue-testing__register-form container">
-    <form @submit.prevent="handleSubmit">
+    <form class="form" @submit.prevent="handleSubmit">
       <h3>Ein Konto registrieren</h3>
       <div class="form-group mb-2">
         <input class="form-control" v-model="formData.name" name="name" type="text" placeholder="Ihr Name ..." />
