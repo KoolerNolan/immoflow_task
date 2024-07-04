@@ -1,8 +1,48 @@
 <template>
   <div v-if="isLoggedIn" class="container">
-    <h1 class="mb-4">Your account</h1>
+    <div class="mb-4">
+      <h1 class="mb-3">Welcome, {{ userFormData.name }}!</h1>
+      <div class="alert alert-dark" role="alert">
+        <p class="m-0 p-0">Here you can adjust your account info and credentials.</p>
+      </div>
+    </div>
     <form class="form" @submit.prevent="handleSubmit">
-      <div class="action-wrapper mt-3 d-flex flex-row align-items-center gap-3">
+      <div class="customize-account-wrapper">
+        <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
+          <input
+            class="form-control flex-fill"
+            v-model="formData.name"
+            name="name"
+            type="text"
+            placeholder="Your new name ..."
+          />
+          <button class="btn btn-secondary" type="button" @click="handleUpdateName">Update Name</button>
+        </div>
+        <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
+          <input
+            class="form-control flex-fill"
+            v-model="formData.email"
+            name="email"
+            type="email"
+            placeholder="Your new email address ..."
+          />
+          <div v-if="emailError" class="text-danger">{{ emailError }}</div>
+          <button class="btn btn-secondary" type="button" @click="handleUpdateEmail">Update Email</button>
+        </div>
+        <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
+          <input
+            class="form-control flex-fill"
+            v-model="formData.password"
+            name="password"
+            type="password"
+            placeholder="Your new password ..."
+            autocomplete="off"
+          />
+          <div v-if="passwordError" class="text-danger">{{ passwordError }}</div>
+          <button class="btn btn-secondary" type="button" @click="handleUpdatePassword">Update Password</button>
+        </div>
+      </div>
+      <div class="action-wrapper mt-4 d-flex flex-row align-items-center gap-3">
         <button class="btn btn-primary" type="submit">Sign out</button>
         <button class="btn btn-warning" type="button" @click="handleDeleteAccount">
           Delete account
@@ -15,14 +55,85 @@
   </div>
 </template>
 
+<style scoped>
+.customize-account-wrapper div button {
+  width: 235px;
+}
+</style>
+
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useStore } from '@/store'
 import router from '@/router'
+
+const formData = reactive({
+  name: '',
+  email: '',
+  password: ''
+})
 
 const store = useStore()
 
 const isLoggedIn = computed(() => store.getters.isLoggedIn)
+const userFormData = computed(() => store.getters.userFormData)
+
+formData.name = userFormData.value.name
+formData.email = userFormData.value.email
+formData.password = userFormData.value.password
+
+const emailError = ref<string | null>(null)
+const passwordError = ref<string | null>(null)
+
+const validateEmail = (email: string): boolean => {
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+  return emailPattern.test(email)
+}
+
+const validatePassword = (password: string): boolean => {
+  const passwordPattern = /^(?=.*\d).{8,}$/
+  return passwordPattern.test(password)
+}
+
+const handleUpdateName = async () => {
+  const success = await store.dispatch('updateUserName', formData.name)
+  if (success) {
+    console.log('Name update successful!')
+  } else {
+    console.log('Name update failed.')
+  }
+}
+
+const handleUpdateEmail = async () => {
+  emailError.value = null
+
+  if (!validateEmail(formData.email)) {
+    emailError.value = 'Please enter a valid email address.'
+    return
+  }
+
+  const success = await store.dispatch('updateUserEmail', formData.email)
+  if (success) {
+    console.log('Email update successful!')
+  } else {
+    console.log('Email update failed.')
+  }
+}
+
+const handleUpdatePassword = async () => {
+  passwordError.value = null
+
+  if (!validatePassword(formData.password)) {
+    passwordError.value = 'Password must be at least 8 characters long and include at least one number.'
+    return
+  }
+
+  const success = await store.dispatch('updateUserPassword', formData.password)
+  if (success) {
+    console.log('Password update successful!')
+  } else {
+    console.log('Password update failed.')
+  }
+}
 
 const handleSubmit = async () => {
   const success = await store.dispatch('logout')
