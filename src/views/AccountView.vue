@@ -15,9 +15,13 @@
             name="name"
             type="text"
             placeholder="Your new name ..."
+            autocomplete="off"
           />
-          <button class="btn btn-secondary" type="button" @click="handleUpdateName">Update Name</button>
+          <button class="btn btn-secondary" type="button" @click="handleUpdateName">
+            Update Name
+          </button>
         </div>
+        <div v-if="nameFeedback" class="text-success mb-2">{{ nameFeedback }}</div>
         <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
           <input
             class="form-control flex-fill"
@@ -25,10 +29,14 @@
             name="email"
             type="email"
             placeholder="Your new email address ..."
+            autocomplete="off"
           />
           <div v-if="emailError" class="text-danger">{{ emailError }}</div>
-          <button class="btn btn-secondary" type="button" @click="handleUpdateEmail">Update Email</button>
+          <button class="btn btn-secondary" type="button" @click="handleUpdateEmail">
+            Update Email
+          </button>
         </div>
+        <div v-if="emailFeedback" class="text-success mb-2">{{ emailFeedback }}</div>
         <div class="form-group d-flex flex-row gap-2 align-items-center mb-2">
           <input
             class="form-control flex-fill"
@@ -39,8 +47,11 @@
             autocomplete="off"
           />
           <div v-if="passwordError" class="text-danger">{{ passwordError }}</div>
-          <button class="btn btn-secondary" type="button" @click="handleUpdatePassword">Update Password</button>
+          <button class="btn btn-secondary" type="button" @click="handleUpdatePassword">
+            Update Password
+          </button>
         </div>
+        <div v-if="passwordFeedback" class="text-success mb-2">{{ passwordFeedback }}</div>
       </div>
       <div class="action-wrapper mt-4 d-flex flex-row align-items-center gap-3">
         <button class="btn btn-primary" type="submit">Sign out</button>
@@ -83,6 +94,9 @@ formData.password = userFormData.value.password
 
 const emailError = ref<string | null>(null)
 const passwordError = ref<string | null>(null)
+const nameFeedback = ref<string | null>(null)
+const emailFeedback = ref<string | null>(null)
+const passwordFeedback = ref<string | null>(null)
 
 const validateEmail = (email: string): boolean => {
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
@@ -95,16 +109,18 @@ const validatePassword = (password: string): boolean => {
 }
 
 const handleUpdateName = async () => {
+  nameFeedback.value = null
   const success = await store.dispatch('updateUserName', formData.name)
   if (success) {
-    console.log('Name update successful!')
+    nameFeedback.value = 'Name update successful!'
   } else {
-    console.log('Name update failed.')
+    nameFeedback.value = 'Name update failed.'
   }
 }
 
 const handleUpdateEmail = async () => {
   emailError.value = null
+  emailFeedback.value = null
 
   if (!validateEmail(formData.email)) {
     emailError.value = 'Please enter a valid email address.'
@@ -113,25 +129,27 @@ const handleUpdateEmail = async () => {
 
   const success = await store.dispatch('updateUserEmail', formData.email)
   if (success) {
-    console.log('Email update successful!')
+    emailFeedback.value = 'Email update successful!'
   } else {
-    console.log('Email update failed.')
+    emailFeedback.value = 'Email update failed.'
   }
 }
 
 const handleUpdatePassword = async () => {
   passwordError.value = null
+  passwordFeedback.value = null
 
   if (!validatePassword(formData.password)) {
-    passwordError.value = 'Password must be at least 8 characters long and include at least one number.'
+    passwordError.value =
+      'Password must be at least 8 characters long and include at least one number.'
     return
   }
 
   const success = await store.dispatch('updateUserPassword', formData.password)
   if (success) {
-    console.log('Password update successful!')
+    passwordFeedback.value = 'Password update successful!'
   } else {
-    console.log('Password update failed.')
+    passwordFeedback.value = 'Password update failed.'
   }
 }
 

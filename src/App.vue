@@ -8,6 +8,7 @@ const store = useStore()
 
 onMounted(() => {
   store.dispatch('checkLoginStatus')
+  store.dispatch('initializeUser')
 })
 </script>
 

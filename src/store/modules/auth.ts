@@ -2,10 +2,10 @@ import { Module } from 'vuex'
 import Cookies from 'js-cookie'
 
 interface AuthState {
-  isLoggedIn: boolean,
+  isLoggedIn: boolean
   userFormData: {
-    name: string,
-    email: string,
+    name: string
+    email: string
     password: string
   }
 }
@@ -25,6 +25,7 @@ const authModule: Module<AuthState, any> = {
     },
     setLoggedOut(state) {
       state.isLoggedIn = false
+      state.userFormData = { name: '', email: '', password: '' } // Reset user data on logout
     },
     setUserFormData(state, formData) {
       state.userFormData = formData
@@ -40,7 +41,16 @@ const authModule: Module<AuthState, any> = {
     }
   },
   actions: {
-    login({ commit }, { email, password }) {
+    async initializeUser({ state, commit }) {
+      if (!state.isLoggedIn) return false
+
+      const storedFormData = Cookies.get('userFormData')
+      if (storedFormData) {
+        const parsedData = JSON.parse(storedFormData)
+        commit('setUserFormData', parsedData)
+      }
+    },
+    async login({ commit }, { email, password }) {
       const storedFormData = Cookies.get('userFormData')
       if (storedFormData) {
         const parsedData = JSON.parse(storedFormData)
@@ -70,7 +80,7 @@ const authModule: Module<AuthState, any> = {
         commit('setLoggedOut')
       }
     },
-    updateUserName({ state, commit }, name) {
+    async updateUserName({ state, commit }, name) {
       if (!state.isLoggedIn) return false
 
       const storedFormData = Cookies.get('userFormData')
@@ -83,7 +93,7 @@ const authModule: Module<AuthState, any> = {
       }
       return false
     },
-    updateUserEmail({ state, commit }, email) {
+    async updateUserEmail({ state, commit }, email) {
       if (!state.isLoggedIn) return false
 
       const storedFormData = Cookies.get('userFormData')
@@ -96,7 +106,7 @@ const authModule: Module<AuthState, any> = {
       }
       return false
     },
-    updateUserPassword({ state, commit }, password) {
+    async updateUserPassword({ state, commit }, password) {
       if (!state.isLoggedIn) return false
 
       const storedFormData = Cookies.get('userFormData')
