@@ -17,6 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install necessary packages
+      run: |
+        sudo apt-get install g++ build-essential
+        npm install -g node-gyp
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
