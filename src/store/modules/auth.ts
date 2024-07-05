@@ -1,4 +1,4 @@
-import { Module } from 'vuex'
+import { Module } from '@/vuex'
 import Cookies from 'js-cookie'
 
 interface AuthState {
