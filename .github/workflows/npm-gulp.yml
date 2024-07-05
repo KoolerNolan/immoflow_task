@@ -21,6 +21,7 @@ jobs:
       run: |
         sudo apt-get install g++ build-essential
         npm install -g node-gyp
+        npm install gulp
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
