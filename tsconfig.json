@@ -1,5 +1,8 @@
 {
   "files": [],
+  "types": [
+    "vuex/types"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"
